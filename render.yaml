@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: centuryply-audit-webapp
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn centuryply_audit_webapp:app
+    envVars:
+      FLASK_ENV: production
+      PYTHON_VERSION: 3.10.14
+    disk:
+      name: audit_reports_storage
+      mountPath: /opt/render/project/src/reports
+      sizeGB: 1
+    autoDeploy: true

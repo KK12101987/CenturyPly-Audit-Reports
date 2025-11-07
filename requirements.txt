@@ -1,0 +1,10 @@
+flask
+pandas
+openpyxl
+numpy
+matplotlib
+reportlab
+pdf2image
+Pillow
+gunicorn
+python-dateutil
