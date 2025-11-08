@@ -1,4 +1,3 @@
-
 services:
   - type: web
     name: centuryply-audit-webapp-final-v3-1
@@ -7,8 +6,10 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn centuryply_audit_webapp:app
     envVars:
-      FLASK_ENV: production
-      PYTHON_VERSION: 3.10.14
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.10.14
     disk:
       name: audit_reports_storage_v3_1
       mountPath: /opt/render/project/src/reports
