@@ -1,6 +1,7 @@
+
 services:
   - type: web
-    name: centuryply-audit-webapp
+    name: centuryply-audit-webapp-final-v3-1
     env: python
     plan: free
     buildCommand: pip install -r requirements.txt
@@ -9,7 +10,7 @@ services:
       FLASK_ENV: production
       PYTHON_VERSION: 3.10.14
     disk:
-      name: audit_reports_storage
+      name: audit_reports_storage_v3_1
       mountPath: /opt/render/project/src/reports
       sizeGB: 1
     autoDeploy: true
