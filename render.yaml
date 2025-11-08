@@ -10,8 +10,4 @@ services:
         value: production
       - key: PYTHON_VERSION
         value: 3.10.14
-    disk:
-      name: audit_reports_storage_v3_1
-      mountPath: /opt/render/project/src/reports
-      sizeGB: 1
     autoDeploy: true
