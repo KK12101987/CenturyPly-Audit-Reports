@@ -3,49 +3,52 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>CenturyPly QA Scoring</title>
+  <title>CenturyPly — QA Scorecard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <style>
     :root{--accent:#b41f23;}
-    body{font-family:Inter,system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f6f7f9;}
+    body{font-family:Inter,system-ui, -apple-system, "Segoe UI", Roboto, Arial; background:#f6f7f9;}
     .topbar{background:var(--accent); color:white; padding:10px 18px; display:flex; align-items:center; justify-content:space-between;}
-    .logo-placeholder{width:140px; height:40px; background:rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; border-radius:4px; font-weight:700;}
+    .logo-placeholder img{height:40px;}
     .card{border-radius:8px;}
-    .btn-accent{background:var(--accent); border:none; color:white;}
+    iframe{width:100%; height:calc(100vh - 76px); border:0;}
   </style>
 </head>
 <body>
   <div class="topbar">
     <div style="display:flex;align-items:center;gap:12px;">
-      <div class="logo-placeholder" id="logoArea">Logo</div>
+      <div class="logo-placeholder"><img src="{{ url_for('static', filename='logo.png') }}" alt="Logo"></div>
       <div><h5 style="margin:0">CenturyPly — QA Scorecard</h5><small>Call Audit</small></div>
     </div>
     <div>
-      <button id="runLegacyBtn" class="btn btn-outline-light btn-sm me-2">🧩 Run Legacy</button>
-      <button id="resetFormBtn" class="btn btn-light btn-sm">Reset</button>
+      <div class="btn-group me-2">
+        <button class="btn btn-warning dropdown-toggle fw-bold" type="button" id="reportDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:#b41f23;">
+          📊 Generate Report
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="reportDropdown">
+          <li><a class="dropdown-item" href="#" onclick="generateReport('full')">📘 Full CenturyPly Audit Report</a></li>
+          <li><a class="dropdown-item" href="#" onclick="generateReport('team')">👥 Team-wise Report</a></li>
+          <li><a class="dropdown-item" href="#" onclick="generateReport('rm')">🧑‍💼 RM Performance Summary</a></li>
+        </ul>
+      </div>
+      <button class="btn btn-light me-2" style="color:#b41f23;" onclick="runLegacy()">🧩 Run Legacy</button>
+      <button class="btn btn-outline-light" onclick="location.reload()">Reset</button>
     </div>
   </div>
-  <div class="container my-4">
-    <!-- form content (same as earlier grouped accordion) -->
-    <!-- For brevity, include a link to full scoring form or embed if needed -->
-    <iframe src="/scoring_form_embed" style="border:0;width:100%;height:800px;"></iframe>
-  </div>
 
-  <!-- legacy modal -->
-  <div class="modal fade" id="legacyModal" tabindex="-1"><div class="modal-dialog modal-xl modal-dialog-scrollable"><div class="modal-content">
-  <div class="modal-header"><h5 class="modal-title">Legacy Output</h5><button class="btn-close" data-bs-dismiss="modal"></button></div>
-  <div class="modal-body"><pre id="legacyOutput" style="white-space:pre-wrap;"></pre></div></div></div></div>
+  <iframe src="/scoring"></iframe>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// simple handlers (dummies if full form embedded elsewhere)
-document.getElementById('runLegacyBtn').addEventListener('click', async ()=>{
+function generateReport(type){
+  let url = "/generate_report?mode=" + (type || "full");
+  if (confirm("Generate report: " + type + " ?")) window.location.href = url;
+}
+async function runLegacy(){
   const res = await fetch('/run_legacy', {method:'POST'});
   const j = await res.json();
-  document.getElementById('legacyOutput').textContent = j.output || j.message || '(no output)';
-  var m = new bootstrap.Modal(document.getElementById('legacyModal')); m.show();
-});
-document.getElementById('resetFormBtn').addEventListener('click', ()=> location.reload());
+  alert(j.output || j.message || '(no output)');
+}
 </script>
 </body>
 </html>
